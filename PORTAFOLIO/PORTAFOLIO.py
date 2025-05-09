@@ -1,5 +1,6 @@
 import reflex as rx
 from rxconfig import config
+from .models.blog import BlogPost
 
 # Importar las páginas
 from .pages.quien_soy import quien_soy
