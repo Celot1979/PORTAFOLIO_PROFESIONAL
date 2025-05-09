@@ -34,6 +34,13 @@ class BlogState(rx.State):
 def blog():
     return rx.vstack(
         rx.heading("Blog", size="lg", margin_bottom="1em"),
+        rx.text(
+            "Blog tecnológico",
+            font_size="1.5em",
+            font_weight="bold",
+            color="#4CAF50",
+            margin_bottom="2em",
+        ),
         rx.button(
             "Nueva Entrada",
             on_click=BlogState.toggle_editor,
