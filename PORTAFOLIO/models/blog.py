@@ -1,11 +1,21 @@
-import reflex as rx
+from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
+from ..database import Base
 
-class BlogPost(rx.Model, table=True):
-    title: str
-    content: str
-    image_url: str = ""
-    created_at: datetime = datetime.now()
-    updated_at: datetime = datetime.now()
-    author: str = "Admin"
-    tags: str = "" 
+# Define el modelo BlogPost
+class BlogPost(Base):
+    __tablename__ = 'blog_posts'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    content = Column(String)
+    image_url = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+    def __repr__(self):
+        return f"<BlogPost(title='{self.title}')>"
+
+    def save(self, session):
+        session.add(self)
+        session.commit()

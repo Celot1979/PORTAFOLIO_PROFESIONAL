@@ -1,22 +1,44 @@
 import reflex as rx
 from ..models.blog import BlogPost
+from ..database import get_db, Base, engine
 from datetime import datetime
+from typing import List, Dict, Any
+from sqlalchemy.orm import Session
+
+# Crear las tablas si no existen
+Base.metadata.create_all(engine)
 
 class BlogState(rx.State):
     title: str = ""
     content: str = ""
     image_url: str = ""
-    posts: list[BlogPost] = []
+    posts: List[Dict[str, Any]] = []
     show_editor: bool = False
 
     def load_posts(self):
-        self.posts = BlogPost.select().order_by(BlogPost.created_at.desc())
+        """Loads blog posts from the database."""
+        db: Session = next(get_db())  # Obtiene una sesión de la base de datos
+        db_posts = db.query(BlogPost).order_by(BlogPost.created_at.desc()).all()
+        self.posts = [
+            {
+                "id": post.id,
+                "title": post.title,
+                "content": post.content,
+                "image_url": post.image_url,
+                "created_at": post.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                "updated_at": post.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+            }
+            for post in db_posts
+        ]
 
     def toggle_editor(self):
+        """Toggles the visibility of the blog post editor."""
         self.show_editor = not self.show_editor
 
     def create_post(self):
+        """Creates a new blog post and saves it to the database."""
         if self.title and self.content:
+            db: Session = next(get_db())  # Obtiene una sesión de la base de datos
             post = BlogPost(
                 title=self.title,
                 content=self.content,
@@ -24,7 +46,7 @@ class BlogState(rx.State):
                 created_at=datetime.now(),
                 updated_at=datetime.now()
             )
-            post.save()
+            post.save(db)  # Pasa la sesión al método save
             self.title = ""
             self.content = ""
             self.image_url = ""
@@ -32,6 +54,7 @@ class BlogState(rx.State):
             self.load_posts()
 
 def blog():
+    """Defines the UI for the blog page."""
     return rx.vstack(
         rx.heading("Blog", size="lg", margin_bottom="1em"),
         rx.button(
@@ -51,7 +74,7 @@ def blog():
                     on_change=BlogState.set_title,
                     margin_bottom="1em",
                 ),
-                rx.textarea(
+                rx.text_area(
                     placeholder="Contenido",
                     value=BlogState.content,
                     on_change=BlogState.set_content,
@@ -80,19 +103,19 @@ def blog():
         rx.foreach(
             BlogState.posts,
             lambda post: rx.vstack(
-                rx.heading(post.title, size="md"),
+                rx.heading(post["title"], size="md"),
                 rx.cond(
-                    post.image_url,
+                    post["image_url"],
                     rx.image(
-                        src=post.image_url,
+                        src=post["image_url"],
                         width="100%",
                         max_width="600px",
                         margin_bottom="1em",
                     ),
                 ),
-                rx.markdown(post.content),
+                rx.markdown(post["content"]),
                 rx.text(
-                    f"Publicado el {post.created_at.strftime('%d/%m/%Y %H:%M')}",
+                    f"Publicado el {post['created_at']}",
                     font_size="0.8em",
                     color="#888888",
                 ),
@@ -111,4 +134,4 @@ def blog():
             "min_height": "100vh",
             "padding": "2em",
         },
-    ) 
+    )

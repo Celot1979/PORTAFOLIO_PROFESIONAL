@@ -20,7 +20,7 @@ def quien_soy():
                 rx.text(
                     "Aquí puedes escribir tu descripción personal. Cuéntanos sobre ti, tus intereses, "
                     "tu experiencia y tus objetivos profesionales. Esta sección es una oportunidad "
-                    "para que los visitantes conozcan más sobre quién eres y qué te apasiona hhhh.",
+                    "para que los visitantes conozcan más sobre quién eres y qué te apasiona.",
                     font_size="1.1em",
                     line_height="1.6",
                 ),
