@@ -1,6 +1,4 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from peewee import SqliteDatabase
 import os
 
 # Obtener la ruta absoluta del directorio actual
@@ -12,20 +10,14 @@ os.makedirs(db_dir, exist_ok=True)
 # Construir la ruta completa a la base de datos
 db_path = os.path.join(db_dir, "blog.db")
 
-# Configura la conexión a la base de datos SQLite
-DATABASE_URL = f"sqlite:///{db_path}"
-engine = create_engine(DATABASE_URL, echo=True)
+# Crear la instancia de la base de datos
+db = SqliteDatabase(db_path)
 
-# Crea una sesión para interactuar con la base de datos
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base para los modelos
-Base = declarative_base()
-
-# Función para obtener una sesión de la base de datos
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close() 
+# Función para inicializar la base de datos
+def init_db():
+    db.connect()
+    # Importar aquí para evitar importación circular
+    from .models.repositorio import Repositorio
+    from .models.blog import BlogPost
+    db.create_tables([Repositorio, BlogPost], safe=True)
+    db.close()

@@ -1,12 +1,7 @@
 import reflex as rx
 from ..models.blog import BlogPost
-from ..database import get_db, Base, engine
 from datetime import datetime
 from typing import List, Dict, Any
-from sqlalchemy.orm import Session
-
-# Crear las tablas si no existen
-Base.metadata.create_all(engine)
 
 class BlogState(rx.State):
     title: str = ""
@@ -17,8 +12,7 @@ class BlogState(rx.State):
 
     def load_posts(self):
         """Loads blog posts from the database."""
-        db: Session = next(get_db())  # Obtiene una sesión de la base de datos
-        db_posts = db.query(BlogPost).order_by(BlogPost.created_at.desc()).all()
+        db_posts = BlogPost.select().order_by(BlogPost.created_at.desc())
         self.posts = [
             {
                 "id": post.id,
@@ -38,7 +32,6 @@ class BlogState(rx.State):
     def create_post(self):
         """Creates a new blog post and saves it to the database."""
         if self.title and self.content:
-            db: Session = next(get_db())  # Obtiene una sesión de la base de datos
             post = BlogPost(
                 title=self.title,
                 content=self.content,
@@ -46,7 +39,7 @@ class BlogState(rx.State):
                 created_at=datetime.now(),
                 updated_at=datetime.now()
             )
-            post.save(db)  # Pasa la sesión al método save
+            post.save()
             self.title = ""
             self.content = ""
             self.image_url = ""

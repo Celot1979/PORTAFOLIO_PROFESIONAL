@@ -1,12 +1,15 @@
 import reflex as rx
 from rxconfig import config
 from .models.blog import BlogPost
+from .database import init_db
 
 # Importar las páginas
 from .pages.quien_soy import quien_soy
 from .pages.proyectos import proyectos
 from .pages.blog import blog
 from .pages.contacto import contacto
+from .pages.subida_repositorios import subida_repositorios
+from .pages.login import login
 
 # Estilo común para el tema oscuro
 style = {
@@ -43,10 +46,17 @@ def index():
         style=style,
     )
 
-# Configuración de la aplicación
+# Crear la aplicación
 app = rx.App()
+
+# Inicializar la base de datos
+init_db()
+
+# Agregar las rutas
 app.add_page(index)
 app.add_page(quien_soy, route="/quien-soy")
 app.add_page(proyectos, route="/proyectos")
 app.add_page(blog, route="/blog")
 app.add_page(contacto, route="/contacto")
+app.add_page(subida_repositorios, route="/admin/repositorios")
+app.add_page(login, route="/login")

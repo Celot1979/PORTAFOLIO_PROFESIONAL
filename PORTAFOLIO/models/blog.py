@@ -1,21 +1,21 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from peewee import *
 from datetime import datetime
-from ..database import Base
+from ..database import db
 
 # Define el modelo BlogPost
-class BlogPost(Base):
-    __tablename__ = 'blog_posts'
+class BlogPost(Model):
+    title = CharField()
+    content = TextField()
+    image_url = CharField(null=True)
+    created_at = DateTimeField(default=datetime.now)
+    updated_at = DateTimeField(default=datetime.now)
 
-    id = Column(Integer, primary_key=True)
-    title = Column(String)
-    content = Column(String)
-    image_url = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.now)
-    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    class Meta:
+        database = db
 
     def __repr__(self):
         return f"<BlogPost(title='{self.title}')>"
 
-    def save(self, session):
-        session.add(self)
-        session.commit()
+    def save(self):
+        self.updated_at = datetime.now()
+        return super().save()
