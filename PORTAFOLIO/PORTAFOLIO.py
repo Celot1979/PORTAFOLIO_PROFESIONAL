@@ -9,6 +9,8 @@ from .pages.proyectos import proyectos
 from .pages.blog import blog
 from .pages.contacto import contacto
 from .pages.subida_repositorios import subida_repositorios
+from .pages.subida_blog import subida_blog
+from .pages.admin import admin
 from .pages.login import login
 
 # Estilo común para el tema oscuro
@@ -58,5 +60,7 @@ app.add_page(quien_soy, route="/quien-soy")
 app.add_page(proyectos, route="/proyectos")
 app.add_page(blog, route="/blog")
 app.add_page(contacto, route="/contacto")
+app.add_page(admin, route="/admin")
 app.add_page(subida_repositorios, route="/admin/repositorios")
+app.add_page(subida_blog, route="/admin/blog")
 app.add_page(login, route="/login")

@@ -4,11 +4,7 @@ from datetime import datetime
 from typing import List, Dict, Any
 
 class BlogState(rx.State):
-    title: str = ""
-    content: str = ""
-    image_url: str = ""
     posts: List[Dict[str, Any]] = []
-    show_editor: bool = False
 
     def load_posts(self):
         """Loads blog posts from the database."""
@@ -25,74 +21,10 @@ class BlogState(rx.State):
             for post in db_posts
         ]
 
-    def toggle_editor(self):
-        """Toggles the visibility of the blog post editor."""
-        self.show_editor = not self.show_editor
-
-    def create_post(self):
-        """Creates a new blog post and saves it to the database."""
-        if self.title and self.content:
-            post = BlogPost(
-                title=self.title,
-                content=self.content,
-                image_url=self.image_url,
-                created_at=datetime.now(),
-                updated_at=datetime.now()
-            )
-            post.save()
-            self.title = ""
-            self.content = ""
-            self.image_url = ""
-            self.show_editor = False
-            self.load_posts()
-
 def blog():
     """Defines the UI for the blog page."""
     return rx.vstack(
         rx.heading("Blog", size="lg", margin_bottom="1em"),
-        rx.button(
-            "Nueva Entrada",
-            on_click=BlogState.toggle_editor,
-            margin_bottom="2em",
-            background_color="#4CAF50",
-            color="white",
-            _hover={"background_color": "#45a049"},
-        ),
-        rx.cond(
-            BlogState.show_editor,
-            rx.vstack(
-                rx.input(
-                    placeholder="Título",
-                    value=BlogState.title,
-                    on_change=BlogState.set_title,
-                    margin_bottom="1em",
-                ),
-                rx.text_area(
-                    placeholder="Contenido",
-                    value=BlogState.content,
-                    on_change=BlogState.set_content,
-                    height="200px",
-                    margin_bottom="1em",
-                ),
-                rx.input(
-                    placeholder="URL de la imagen",
-                    value=BlogState.image_url,
-                    on_change=BlogState.set_image_url,
-                    margin_bottom="1em",
-                ),
-                rx.button(
-                    "Publicar",
-                    on_click=BlogState.create_post,
-                    background_color="#4CAF50",
-                    color="white",
-                    _hover={"background_color": "#45a049"},
-                ),
-                padding="2em",
-                background_color="#2d2d2d",
-                border_radius="10px",
-                margin_bottom="2em",
-            ),
-        ),
         rx.foreach(
             BlogState.posts,
             lambda post: rx.vstack(
