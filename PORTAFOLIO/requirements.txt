@@ -1,1 +1,3 @@
 reflex==0.5.10.post1
+peewee==3.17.0
+python-dotenv==1.0.0

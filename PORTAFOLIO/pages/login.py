@@ -23,9 +23,36 @@ def login():
                 on_click=GlobalState.login,
                 width="100%",
             ),
+            rx.link(
+                rx.button(
+                    "Volver a Inicio",
+                    color_scheme="green",
+                    _hover={"background_color": "#45a049"},
+                    width="100%",
+                ),
+                href="/",
+            ),
             rx.cond(
                 GlobalState.error,
                 rx.text(GlobalState.error, color="red"),
+            ),
+            rx.divider(margin_y="1em"),
+            rx.text("¿Necesitas ayuda? Contáctame:", color="gray"),
+            rx.hstack(
+                rx.link(
+                    "Telegram: @Celot1979",
+                    href="https://t.me/Celot1979",
+                    color="white",
+                    _hover={"color": "#4CAF50"},
+                ),
+                rx.text("|", color="gray"),
+                rx.link(
+                    "Email: dgarciamartinez53@gmail.com",
+                    href="mailto:dgarciamartinez53@gmail.com",
+                    color="white",
+                    _hover={"color": "#4CAF50"},
+                ),
+                spacing="1em",
             ),
             spacing="1em",
             width="100%",

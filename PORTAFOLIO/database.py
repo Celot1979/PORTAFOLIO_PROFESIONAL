@@ -1,7 +1,10 @@
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+from dotenv import load_dotenv
 from peewee import SqliteDatabase
+
+# Cargar variables de entorno
+load_dotenv()
 
 # Obtener la ruta del directorio actual
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -10,7 +13,7 @@ db_dir = os.path.join(current_dir, "BBDD")
 # Asegurarse de que el directorio existe
 os.makedirs(db_dir, exist_ok=True)
 # Construir la ruta completa a la base de datos
-db_path = os.path.join(db_dir, "blog.db")
+db_path = os.path.join(db_dir, os.getenv("DB_PATH", "blog.db"))
 
 # Crear la base de datos
 db = SqliteDatabase(db_path)
