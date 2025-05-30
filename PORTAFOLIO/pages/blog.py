@@ -2,6 +2,7 @@ import reflex as rx
 from ..models.blog import BlogPost
 from datetime import datetime
 from typing import List, Dict, Any
+from ..components.navbar import navbar
 
 class BlogState(rx.State):
     posts: List[Dict[str, Any]] = []
@@ -24,6 +25,7 @@ class BlogState(rx.State):
 def blog():
     """Defines the UI for the blog page."""
     return rx.vstack(
+        navbar(),
         rx.heading("Blog", size="lg", margin_bottom="1em"),
         rx.foreach(
             BlogState.posts,

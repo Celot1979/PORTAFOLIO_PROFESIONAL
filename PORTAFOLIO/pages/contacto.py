@@ -1,7 +1,9 @@
 import reflex as rx
+from ..components.navbar import navbar
 
 def contacto():
     return rx.vstack(
+        navbar(),
         rx.heading("Contacto", size="lg", margin_bottom="1em"),
         rx.text(
             "¿Quieres ponerte en contacto conmigo? Estoy disponible para "

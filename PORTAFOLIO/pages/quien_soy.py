@@ -1,7 +1,9 @@
 import reflex as rx
+from ..components.navbar import navbar
 
 def quien_soy():
     return rx.vstack(
+        navbar(),
         rx.heading("Quién Soy", size="lg", margin_bottom="1em"),
         rx.hstack(
             # Contenedor de la imagen

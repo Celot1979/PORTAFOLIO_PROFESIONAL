@@ -2,6 +2,7 @@ import reflex as rx
 from typing import List, Dict, Any
 from typing_extensions import TypedDict
 from ..models.repositorio import Repositorio
+from ..components.navbar import navbar
 
 class RepositorioDict(TypedDict):
     id: int
@@ -35,6 +36,7 @@ class ProyectosState(rx.State):
 
 def proyectos():
     return rx.vstack(
+        navbar(),
         rx.heading("Mis Proyectos", size="lg", margin_bottom="1em"),
         rx.text(
             "Aquí encontrarás una colección de mis proyectos más destacados. "
