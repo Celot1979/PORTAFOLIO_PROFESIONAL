@@ -7,7 +7,7 @@ class GlobalState(rx.State):
     error: str = ""
 
     def login(self):
-        if self.username == "admin" and self.password == "admin":
+        if self.username == "will" and self.password == "Will1979€_":
             self.is_authenticated = True
             return rx.redirect("/admin/repositorios")
         else:

@@ -3,6 +3,7 @@ from typing import List, Dict, Any
 from typing_extensions import TypedDict
 from ..models.repositorio import Repositorio
 from ..state import GlobalState
+from urllib.parse import urlparse
 
 class RepositorioDict(TypedDict):
     id: int
@@ -13,21 +14,50 @@ class RepositorioDict(TypedDict):
 class SubidaRepositoriosState(rx.State):
     titulo: str = ""
     enlace: str = ""
-    imagen: str = ""
+    imagen_url: str = ""
+    error_message: str = ""
     repositorios: List[RepositorioDict] = []
 
+    def handle_image_url(self, url: str):
+        """Maneja la URL de la imagen."""
+        if url:
+            try:
+                # Validar que sea una URL válida
+                parsed_url = urlparse(url)
+                if not all([parsed_url.scheme, parsed_url.netloc]):
+                    raise ValueError("URL inválida")
+                
+                self.imagen_url = url
+                self.error_message = ""
+                
+            except Exception as e:
+                print(f"Error al validar la URL: {str(e)}")
+                self.error_message = f"Error al validar la URL: {str(e)}"
+
     def handle_submit(self):
-        Repositorio.create(
-            titulo=self.titulo,
-            enlace=self.enlace,
-            imagen=self.imagen
-        )
-        self.titulo = ""
-        self.enlace = ""
-        self.imagen = ""
-        self.load_repositorios()
+        """Maneja el envío del formulario."""
+        if self.titulo and self.enlace and self.imagen_url:
+            try:
+                # Crear el repositorio
+                Repositorio.create(
+                    titulo=self.titulo,
+                    enlace=self.enlace,
+                    imagen=self.imagen_url
+                )
+                
+                # Limpiar el formulario
+                self.titulo = ""
+                self.enlace = ""
+                self.imagen_url = ""
+                self.error_message = ""
+                
+                # Recargar la lista de repositorios
+                self.load_repositorios()
+            except Exception as e:
+                self.error_message = f"Error al crear el repositorio: {str(e)}"
 
     def load_repositorios(self):
+        """Carga la lista de repositorios desde la base de datos."""
         db_repos = Repositorio.select().order_by(Repositorio.id.desc())
         self.repositorios = [
             {
@@ -40,6 +70,7 @@ class SubidaRepositoriosState(rx.State):
         ]
 
     def delete_repo(self, repo_id: int):
+        """Elimina un repositorio."""
         Repositorio.delete_by_id(repo_id)
         self.load_repositorios()
 
@@ -68,10 +99,18 @@ def subida_repositorios():
                     required=True,
                 ),
                 rx.input(
-                    placeholder="URL de la Imagen",
-                    value=SubidaRepositoriosState.imagen,
-                    on_change=SubidaRepositoriosState.set_imagen,
+                    placeholder="URL de la imagen (ej: https://ejemplo.com/imagen.jpg)",
+                    value=SubidaRepositoriosState.imagen_url,
+                    on_change=SubidaRepositoriosState.handle_image_url,
                     required=True,
+                ),
+                rx.cond(
+                    SubidaRepositoriosState.imagen_url,
+                    rx.image(src=SubidaRepositoriosState.imagen_url, width="200px", height="200px"),
+                ),
+                rx.cond(
+                    SubidaRepositoriosState.error_message,
+                    rx.text(SubidaRepositoriosState.error_message, color="red"),
                 ),
                 rx.button(
                     "Subir Repositorio",

@@ -1,6 +1,6 @@
 from peewee import *
 from datetime import datetime
-from ..database import db
+from PORTAFOLIO.database import db
 
 # Define el modelo BlogPost
 class BlogPost(Model):
