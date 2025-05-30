@@ -8,29 +8,31 @@ load_dotenv()
 
 # Obtener la ruta del directorio actual
 current_dir = os.path.dirname(os.path.abspath(__file__))
-# Construir la ruta al directorio BBDD
-db_dir = os.path.join(current_dir, "BBDD")
-# Asegurarse de que el directorio existe
-os.makedirs(db_dir, exist_ok=True)
-# Construir la ruta completa a la base de datos
-db_path = os.path.join(db_dir, os.getenv("DB_PATH", "blog.db"))
+# Construir la ruta a la base de datos
+db_path = os.path.join(os.path.dirname(current_dir), 'reflex.db')
 
-# Crear la base de datos
+# Crear la base de datos SQLite
 db = SqliteDatabase(db_path)
 
-# Función para inicializar la base de datos
 def init_db():
+    """Inicializa la base de datos."""
     try:
-        if not db.is_closed():
-            db.close()
+        # Conectar a la base de datos
         db.connect()
-        # Importar aquí para evitar importación circular
-        from PORTAFOLIO.models.repositorio import Repositorio
-        from PORTAFOLIO.models.blog import BlogPost
+        
+        # Importar los modelos aquí para evitar importaciones circulares
+        from .models.blog import BlogPost
+        from .models.repositorio import Repositorio
+        
+        # Crear las tablas si no existen
         db.create_tables([Repositorio, BlogPost], safe=True)
+        
+        print("Base de datos inicializada correctamente")
+        
     except Exception as e:
-        print(f"Error al inicializar la base de datos: {e}")
+        print(f"Error al inicializar la base de datos: {str(e)}")
         raise e
     finally:
+        # Cerrar la conexión
         if not db.is_closed():
             db.close()

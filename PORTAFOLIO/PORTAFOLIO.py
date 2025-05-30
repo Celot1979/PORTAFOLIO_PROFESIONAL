@@ -6,12 +6,14 @@ from .database import init_db
 # Importar las páginas
 from .pages.quien_soy import quien_soy
 from .pages.proyectos import proyectos
-from .pages.blog import blog
+from .pages.blog import blog, blog_post
 from .pages.contacto import contacto
 from .pages.subida_repositorios import subida_repositorios
 from .pages.subida_blog import subida_blog
 from .pages.admin import admin
 from .pages.login import login
+from .pages.sitemap import sitemap
+from .pages.robots import robots
 
 # Estilo común para el tema oscuro
 style = {
@@ -120,8 +122,11 @@ app.add_page(index)
 app.add_page(quien_soy, route="/quien-soy")
 app.add_page(proyectos, route="/proyectos")
 app.add_page(blog, route="/blog")
+app.add_page(blog_post, route="/blog/[slug]")
 app.add_page(contacto, route="/contacto")
 app.add_page(admin, route="/admin")
 app.add_page(subida_repositorios, route="/admin/repositorios")
 app.add_page(subida_blog, route="/admin/blog")
 app.add_page(login, route="/login")
+app.add_page(sitemap, route="/sitemap.xml")
+app.add_page(robots, route="/robots.txt")

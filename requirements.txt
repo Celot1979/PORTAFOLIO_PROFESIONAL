@@ -1,1 +1,5 @@
 reflex==0.5.10.post1
+sqlalchemy>=2.0.0
+alembic>=1.12.0
+python-dotenv>=1.0.0
+httpx>=0.24.0
