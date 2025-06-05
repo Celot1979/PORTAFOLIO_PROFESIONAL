@@ -89,7 +89,7 @@ def init_db():
         # Crear las tablas si no existen
         db.create_tables([Repositorio, BlogPost], safe=True)
         
-        print("✓ Base de datos inicializada correctamente")
+        print("✓ Base de datos inicializada correctamente ll")
         
         # Verificar los datos
         from .database_utils import verify_data, export_data
