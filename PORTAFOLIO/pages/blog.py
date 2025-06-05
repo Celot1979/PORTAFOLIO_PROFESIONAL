@@ -7,6 +7,25 @@ from typing_extensions import TypedDict
 from ..state import GlobalState
 from ..database import db
 
+class BlogPostDict(TypedDict):
+    id: str
+    title: str
+    content: str
+    image_url: str
+    created_at: str
+    updated_at: str
+    meta_title: str
+    meta_description: str
+    meta_keywords: str
+    slug: str
+    canonical_url: str
+    og_title: str
+    og_description: str
+    og_image: str
+    twitter_title: str
+    twitter_description: str
+    twitter_image: str
+
 class BlogState(rx.State):
     """Estado para el blog."""
     posts: List[Dict[str, str]] = []
@@ -27,7 +46,7 @@ class BlogState(rx.State):
     def load_posts(self):
         """Carga los posts desde la base de datos."""
         with db.atomic():
-            posts = BlogPost.select().order_by(BlogPost.created_at.desc())
+            db_posts = BlogPost.select().order_by(BlogPost.created_at.desc())
             self.posts = [
                 {
                     "id": str(post.id),
@@ -35,7 +54,6 @@ class BlogState(rx.State):
                     "content": str(post.content) if post.content else "",
                     "image_url": str(post.image_url) if post.image_url else "",
                     "created_at": post.created_at.strftime('%d/%m/%Y') if post.created_at else "",
-                    "updated_at": post.updated_at.strftime('%d/%m/%Y') if post.updated_at else "",
                     "meta_title": str(post.meta_title) if post.meta_title else "",
                     "meta_description": str(post.meta_description) if post.meta_description else "",
                     "meta_keywords": str(post.meta_keywords) if post.meta_keywords else "",
@@ -48,7 +66,7 @@ class BlogState(rx.State):
                     "twitter_description": str(post.twitter_description) if post.twitter_description else "",
                     "twitter_image": str(post.twitter_image) if post.twitter_image else "",
                 }
-                for post in posts
+                for post in db_posts
             ]
 
     def select_post(self, post_id: str):
@@ -110,14 +128,31 @@ class BlogState(rx.State):
 
 def blog():
     """Página principal del blog."""
+    def render_post(post: Dict[str, str]):
+        return rx.box(
+            rx.vstack(
+                rx.heading(post["title"], size="3"),
+                rx.text(f"Publicado el {post['created_at']}", color="gray"),
+                rx.image(post["image_url"], width="100%", height="200px", object_fit="cover"),
+                rx.text(post["content"][:200] + "...", color="gray"),
+                rx.button("Leer más", on_click=lambda: BlogState.select_post(post["id"])),
+                padding="1em",
+                background_color="#2d2d2d",
+                border_radius="lg",
+                width="300px",
+                _hover={"transform": "translateY(-5px)", "transition": "all 0.3s ease"},
+            ),
+            margin="1em",
+        )
+
     return rx.vstack(
         navbar(),
-        rx.heading("Blog", size="lg", margin_bottom="2em"),
+        rx.heading("Blog", size="2", margin_bottom="2em"),
         rx.cond(
             BlogState.current_slug,
             rx.vstack(
                 rx.button("← Volver", on_click=BlogState.clear_selection, margin_bottom="1em"),
-                rx.heading(BlogState.selected_post_title, size="xl"),
+                rx.heading(BlogState.selected_post_title, size="1"),
                 rx.text(f"Publicado el {BlogState.selected_post_created_at}", color="gray"),
                 rx.image(BlogState.selected_post_image_url, width="100%", max_width="800px", margin_y="2em"),
                 rx.markdown(BlogState.selected_post_content),
@@ -147,26 +182,12 @@ def blog():
             rx.vstack(
                 rx.foreach(
                     BlogState.posts,
-                    lambda post: rx.box(
-                        rx.vstack(
-                            rx.heading(post["title"], size="md"),
-                            rx.text(f"Publicado el {post['created_at']}", color="gray"),
-                            rx.image(post["image_url"], width="100%", height="200px", object_fit="cover"),
-                            rx.text(post["content"][:200] + "...", color="gray"),
-                            rx.button("Leer más", on_click=lambda: BlogState.select_post(post["id"])),
-                            padding="1em",
-                            background_color="#2d2d2d",
-                            border_radius="lg",
-                            width="300px",
-                            _hover={"transform": "translateY(-5px)", "transition": "all 0.3s ease"},
-                        ),
-                        margin="1em",
-                    ),
+                    render_post
                 ),
                 direction="row",
                 wrap="wrap",
                 justify="center",
-                spacing="1em",
+                spacing="1",
             ),
         ),
         on_mount=BlogState.load_posts,
@@ -183,7 +204,7 @@ def blog_post(slug: Optional[str] = None):
     if not slug:
         return rx.vstack(
             navbar(),
-            rx.heading("Blog", size="lg", margin_bottom="2em"),
+            rx.heading("Blog", size="2", margin_bottom="2em"),
             rx.text("Post no encontrado"),
             style={
                 "background_color": "#1a1a1a",
@@ -194,12 +215,12 @@ def blog_post(slug: Optional[str] = None):
         )
     return rx.vstack(
         navbar(),
-        rx.heading("Blog", size="lg", margin_bottom="2em"),
+        rx.heading("Blog", size="2", margin_bottom="2em"),
         rx.cond(
             BlogState.current_slug,
             rx.vstack(
                 rx.button("← Volver", on_click=BlogState.clear_selection, margin_bottom="1em"),
-                rx.heading(BlogState.selected_post_title, size="xl"),
+                rx.heading(BlogState.selected_post_title, size="1"),
                 rx.text(f"Publicado el {BlogState.selected_post_created_at}", color="gray"),
                 rx.image(BlogState.selected_post_image_url, width="100%", max_width="800px", margin_y="2em"),
                 rx.markdown(BlogState.selected_post_content),
@@ -235,4 +256,4 @@ def blog_post(slug: Optional[str] = None):
             "min_height": "100vh",
             "padding": "2em",
         },
-    )
+    ) 

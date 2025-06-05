@@ -2,7 +2,7 @@ import reflex as rx
 
 def contacto():
     return rx.vstack(
-        rx.heading("Contacto", size="lg"),
+        rx.heading("Contacto", size="2"),
         rx.vstack(
             rx.text("¿Quieres contactar conmigo? Aquí tienes mis datos:", color="gray"),
             rx.hstack(
@@ -21,7 +21,7 @@ def contacto():
                     _hover={"color": "#4CAF50"},
                     font_size="1.2em",
                 ),
-                spacing="1em",
+                spacing="1",
             ),
             rx.link(
                 rx.button(
@@ -33,7 +33,7 @@ def contacto():
                 ),
                 href="/",
             ),
-            spacing="2em",
+            spacing="2",
             width="100%",
             max_width="800px",
             padding="2em",

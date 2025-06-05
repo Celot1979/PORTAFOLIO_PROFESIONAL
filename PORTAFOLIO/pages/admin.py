@@ -6,7 +6,7 @@ def admin():
         GlobalState.is_authenticated,
         rx.vstack(
             rx.hstack(
-                rx.heading("Panel de Administración", size="lg"),
+                rx.heading("Panel de Administración", size="2"),
                 rx.spacer(),
                 rx.button("Cerrar Sesión", on_click=GlobalState.logout, color_scheme="red"),
                 width="100%",
@@ -15,7 +15,7 @@ def admin():
             rx.hstack(
                 rx.box(
                     rx.vstack(
-                        rx.heading("Gestión de Repositorios", size="md"),
+                        rx.heading("Gestión de Repositorios", size="3"),
                         rx.text("Administra tus proyectos y repositorios"),
                         rx.button(
                             "Ir a Repositorios",
@@ -38,7 +38,7 @@ def admin():
                 ),
                 rx.box(
                     rx.vstack(
-                        rx.heading("Gestión del Blog", size="md"),
+                        rx.heading("Gestión del Blog", size="3"),
                         rx.text("Administra las entradas de tu blog"),
                         rx.button(
                             "Ir al Blog",
@@ -59,7 +59,7 @@ def admin():
                     ),
                     width="300px",
                 ),
-                spacing="2em",
+                spacing="2",
                 justify="center",
             ),
             style={
@@ -71,10 +71,10 @@ def admin():
         ),
         rx.center(
             rx.vstack(
-                rx.heading("Acceso Denegado", size="lg"),
+                rx.heading("Acceso Denegado", size="2"),
                 rx.text("Por favor, inicia sesión para acceder a esta página."),
                 rx.button("Ir al Login", on_click=rx.redirect("/login")),
-                spacing="1em",
+                spacing="1",
             ),
             width="100%",
             height="100vh",

@@ -2,6 +2,7 @@ import reflex as rx
 from rxconfig import config
 from .models.blog import BlogPost
 from .database import init_db
+from .database import db
 
 # Importar las páginas
 from .pages.quien_soy import quien_soy
@@ -41,7 +42,7 @@ def index():
     return rx.vstack(
         navbar(),
         rx.vstack(
-            rx.heading("Bienvenido a mi portafolio personal", size="lg"),
+            rx.heading("Bienvenido a mi portafolio personal", size="2"),
             rx.text(
                 "Desarrollador Full Stack & Entusiasta de la Tecnología",
                 font_size="1.2em",
@@ -51,7 +52,7 @@ def index():
             rx.hstack(
                 rx.vstack(
                     rx.icon("code", size=32, color="#4CAF50"),
-                    rx.heading("Desarrollo", size="md"),
+                    rx.heading("Desarrollo", size="3"),
                     rx.text("Creando soluciones digitales innovadoras", color="gray"),
                     padding="2em",
                     background_color="#2d2d2d",
@@ -62,7 +63,7 @@ def index():
                 ),
                 rx.vstack(
                     rx.icon("database", size=32, color="#4CAF50"),
-                    rx.heading("Backend", size="md"),
+                    rx.heading("Backend", size="3"),
                     rx.text("Arquitectura robusta y escalable", color="gray"),
                     padding="2em",
                     background_color="#2d2d2d",
@@ -73,7 +74,7 @@ def index():
                 ),
                 rx.vstack(
                     rx.icon("palette", size=32, color="#4CAF50"),
-                    rx.heading("Diseño", size="md"),
+                    rx.heading("Diseño", size="3"),
                     rx.text("Interfaces intuitivas y atractivas", color="gray"),
                     padding="2em",
                     background_color="#2d2d2d",
@@ -82,7 +83,7 @@ def index():
                     align_items="center",
                     _hover={"transform": "translateY(-5px)", "transition": "all 0.3s ease"},
                 ),
-                spacing="2em",
+                spacing="2",
                 margin_bottom="3em",
             ),
             rx.text(
@@ -97,11 +98,11 @@ def index():
                     color_scheme="green",
                     _hover={"background_color": "#45a049"},
                     margin_top="2em",
-                    size="lg",
+                    size="2",
                 ),
                 href="/proyectos",
             ),
-            spacing="2em",
+            spacing="2",
             width="100%",
             max_width="1200px",
             padding="2em",

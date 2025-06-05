@@ -37,7 +37,7 @@ class ProyectosState(rx.State):
 def proyectos():
     return rx.vstack(
         navbar(),
-        rx.heading("Mis Proyectos", size="lg", margin_bottom="1em"),
+        rx.heading("Mis Proyectos", size="2", margin_bottom="1em"),
         rx.text(
             "Aquí encontrarás una colección de mis proyectos más destacados. "
             "Cada proyecto representa un desafío único y una oportunidad de aprendizaje.",
@@ -63,7 +63,7 @@ def proyectos():
                                 border_radius="lg",
                                 fallback="https://via.placeholder.com/800x400?text=Imagen+no+disponible",
                             ),
-                            rx.heading(repo["titulo"], size="md", margin_top="1em"),
+                            rx.heading(repo["titulo"], size="3", margin_top="1em"),
                             rx.link(
                                 "Ver en GitHub",
                                 href=str(repo["enlace"]),
@@ -72,7 +72,7 @@ def proyectos():
                                 _hover={"text_decoration": "underline"},
                             ),
                             align_items="start",
-                            spacing="1em",
+                            spacing="1",
                             padding="2em",
                             border="1px solid #2d3748",
                             border_radius="lg",
@@ -88,7 +88,7 @@ def proyectos():
                         margin_bottom="2em",
                     ),
                 ),
-                spacing="2em",
+                spacing="2",
                 align="center",
                 width="100%",
             ),

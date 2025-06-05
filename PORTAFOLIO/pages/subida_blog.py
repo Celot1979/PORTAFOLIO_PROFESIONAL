@@ -34,7 +34,7 @@ class SubidaBlogState(rx.State):
     meta_title: str = ""
     meta_description: str = ""
     meta_keywords: str = ""
-    slug: str = ""
+    blog_slug: str = ""
     canonical_url: str = ""
     og_title: str = ""
     og_description: str = ""
@@ -56,7 +56,7 @@ class SubidaBlogState(rx.State):
             slug = re.sub(r'-+', '-', slug)
             # Eliminar guiones al inicio y final
             slug = slug.strip('-')
-            self.slug = slug
+            self.blog_slug = slug
 
     def handle_title_change(self, value: str):
         """Maneja el cambio en el título y genera el slug."""
@@ -106,7 +106,7 @@ class SubidaBlogState(rx.State):
                     meta_title=self.meta_title,
                     meta_description=self.meta_description,
                     meta_keywords=self.meta_keywords,
-                    slug=self.slug,
+                    slug=self.blog_slug,
                     canonical_url=self.canonical_url,
                     og_title=self.og_title,
                     og_description=self.og_description,
@@ -124,7 +124,7 @@ class SubidaBlogState(rx.State):
                 self.meta_title = ""
                 self.meta_description = ""
                 self.meta_keywords = ""
-                self.slug = ""
+                self.blog_slug = ""
                 self.canonical_url = ""
                 self.og_title = ""
                 self.og_description = ""
@@ -174,7 +174,7 @@ def subida_blog():
         GlobalState.is_authenticated,
         rx.vstack(
             rx.hstack(
-                rx.heading("Gestión del Blog", size="lg"),
+                rx.heading("Gestión del Blog", size="2"),
                 rx.spacer(),
                 rx.button("Cerrar Sesión", on_click=GlobalState.logout, color_scheme="red"),
                 width="100%",
@@ -182,7 +182,7 @@ def subida_blog():
             ),
             rx.vstack(
                 # Campos básicos
-                rx.heading("Información Básica", size="md"),
+                rx.heading("Información Básica", size="3"),
                 rx.input(
                     placeholder="Título de la entrada",
                     value=SubidaBlogState.title,
@@ -219,7 +219,7 @@ def subida_blog():
                 ),
                 
                 # Campos SEO
-                rx.heading("SEO", size="md", margin_top="2em"),
+                rx.heading("SEO", size="3", margin_top="2em"),
                 rx.input(
                     placeholder="Meta Título",
                     value=SubidaBlogState.meta_title,
@@ -238,8 +238,8 @@ def subida_blog():
                 ),
                 rx.input(
                     placeholder="Slug (URL amigable)",
-                    value=SubidaBlogState.slug,
-                    on_change=SubidaBlogState.set_slug,
+                    value=SubidaBlogState.blog_slug,
+                    on_change=SubidaBlogState.set_blog_slug,
                 ),
                 rx.input(
                     placeholder="URL Canónica",
@@ -248,7 +248,7 @@ def subida_blog():
                 ),
                 
                 # Open Graph
-                rx.heading("Open Graph", size="md", margin_top="2em"),
+                rx.heading("Open Graph", size="3", margin_top="2em"),
                 rx.input(
                     placeholder="OG Título",
                     value=SubidaBlogState.og_title,
@@ -267,7 +267,7 @@ def subida_blog():
                 ),
                 
                 # Twitter Cards
-                rx.heading("Twitter Cards", size="md", margin_top="2em"),
+                rx.heading("Twitter Cards", size="3", margin_top="2em"),
                 rx.input(
                     placeholder="Twitter Título",
                     value=SubidaBlogState.twitter_title,
@@ -293,17 +293,17 @@ def subida_blog():
                     "Publicar Entrada",
                     on_click=SubidaBlogState.handle_submit,
                 ),
-                spacing="1em",
+                spacing="1",
             ),
             rx.divider(),
-            rx.heading("Entradas Existentes", size="md", margin_top="2em"),
+            rx.heading("Entradas Existentes", size="3", margin_top="2em"),
             rx.vstack(
                 rx.foreach(
                     SubidaBlogState.posts,
                     lambda post: rx.box(
                         rx.vstack(
                             rx.image(src=post["image_url"], width="100px", height="100px"),
-                            rx.heading(post["title"], size="md"),
+                            rx.heading(post["title"], size="3"),
                             rx.text(str(post["content"])[:200] + "...", color="gray.400"),
                             rx.text(f"Fecha: {post['created_at']}", color="gray.500"),
                             rx.text(f"Slug: {post['slug']}", color="gray.500"),
@@ -313,7 +313,7 @@ def subida_blog():
                                 color_scheme="red",
                             ),
                             align_items="start",
-                            spacing="1em",
+                            spacing="1",
                         ),
                         width="100%",
                         padding="1em",
@@ -321,7 +321,7 @@ def subida_blog():
                         border_radius="md",
                     ),
                 ),
-                spacing="1em",
+                spacing="1",
             ),
             on_mount=SubidaBlogState.load_posts,
             style={
@@ -333,10 +333,10 @@ def subida_blog():
         ),
         rx.center(
             rx.vstack(
-                rx.heading("Acceso Denegado", size="lg"),
+                rx.heading("Acceso Denegado", size="2"),
                 rx.text("Por favor, inicia sesión para acceder a esta página."),
                 rx.button("Ir al Login", on_click=rx.redirect("/login")),
-                spacing="1em",
+                spacing="1",
             ),
             width="100%",
             height="100vh",

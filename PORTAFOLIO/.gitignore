@@ -1,8 +1,9 @@
 *.db
+*.log
 *.py[cod]
+.DS_Store
+.env
+.states
 .web
 __pycache__/
 assets/external/
-.env
-.DS_Store
-*.log

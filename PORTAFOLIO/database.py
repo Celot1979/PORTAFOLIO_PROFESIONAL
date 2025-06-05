@@ -1,18 +1,42 @@
 import sys
 import os
 from dotenv import load_dotenv
-from peewee import SqliteDatabase
+from peewee import PostgresqlDatabase, SqliteDatabase
 
 # Cargar variables de entorno
 load_dotenv()
 
-# Obtener la ruta del directorio actual
-current_dir = os.path.dirname(os.path.abspath(__file__))
-# Construir la ruta a la base de datos
-db_path = os.path.join(os.path.dirname(current_dir), 'reflex.db')
+def get_database():
+    """Obtiene la instancia de la base de datos según el entorno."""
+    db_url = os.getenv("DATABASE_URL")
+    
+    if db_url and db_url.startswith("postgresql://"):
+        # Parsear la URL de PostgreSQL
+        from urllib.parse import urlparse
+        url = urlparse(db_url)
+        
+        # Extraer los componentes de la URL
+        db_name = url.path[1:]  # Eliminar el slash inicial
+        user = url.username
+        password = url.password
+        host = url.hostname
+        port = url.port or 5432
+        
+        return PostgresqlDatabase(
+            db_name,
+            user=user,
+            password=password,
+            host=host,
+            port=port
+        )
+    else:
+        # Fallback a SQLite para desarrollo local
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        db_path = os.path.join(os.path.dirname(current_dir), 'reflex.db')
+        return SqliteDatabase(db_path)
 
-# Crear la base de datos SQLite
-db = SqliteDatabase(db_path)
+# Crear la instancia de la base de datos
+db = get_database()
 
 def init_db():
     """Inicializa la base de datos."""

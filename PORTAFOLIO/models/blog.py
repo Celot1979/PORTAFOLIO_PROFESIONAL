@@ -1,6 +1,6 @@
 from peewee import *
 from datetime import datetime
-from PORTAFOLIO.database import db
+from ..database import db
 import re
 
 def generate_unique_slug(title: str) -> str:

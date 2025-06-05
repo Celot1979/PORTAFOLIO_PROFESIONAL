@@ -3,7 +3,7 @@ from ..state import GlobalState
 
 def login():
     return rx.vstack(
-        rx.heading("Iniciar Sesión", size="lg"),
+        rx.heading("Iniciar Sesión", size="2"),
         rx.vstack(
             rx.input(
                 placeholder="Usuario",
@@ -52,9 +52,9 @@ def login():
                     color="white",
                     _hover={"color": "#4CAF50"},
                 ),
-                spacing="1em",
+                spacing="1",
             ),
-            spacing="1em",
+            spacing="1",
             width="100%",
             max_width="400px",
         ),

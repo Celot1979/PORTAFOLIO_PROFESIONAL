@@ -12,10 +12,10 @@ class GlobalState(rx.State):
     error: str = ""
 
     def login(self):
-        if (
-            self.username == os.getenv("ADMIN_USERNAME", "will")
-            and self.password == os.getenv("ADMIN_PASSWORD", "Will1979€_")
-        ):
+        admin_username = "admin"
+        admin_password = "admin"
+        
+        if self.username == admin_username and self.password == admin_password:
             self.is_authenticated = True
             self.error = ""
             return rx.redirect("/admin")

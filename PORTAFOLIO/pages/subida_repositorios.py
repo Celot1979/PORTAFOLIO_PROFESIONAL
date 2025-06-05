@@ -79,7 +79,7 @@ def subida_repositorios():
         GlobalState.is_authenticated,
         rx.vstack(
             rx.hstack(
-                rx.heading("Gestión de Repositorios", size="lg"),
+                rx.heading("Gestión de Repositorios", size="2"),
                 rx.spacer(),
                 rx.button("Cerrar Sesión", on_click=GlobalState.logout, color_scheme="red"),
                 width="100%",
@@ -116,10 +116,10 @@ def subida_repositorios():
                     "Subir Repositorio",
                     on_click=SubidaRepositoriosState.handle_submit,
                 ),
-                spacing="1em",
+                spacing="1",
             ),
             rx.divider(),
-            rx.heading("Repositorios Existentes", size="md", margin_top="2em"),
+            rx.heading("Repositorios Existentes", size="3", margin_top="2em"),
             rx.vstack(
                 rx.foreach(
                     SubidaRepositoriosState.repositorios,
@@ -135,14 +135,14 @@ def subida_repositorios():
                             on_click=lambda: SubidaRepositoriosState.delete_repo(repo["id"]),
                             color_scheme="red",
                         ),
-                        justify="space-between",
+                        justify="between",
                         width="100%",
                         padding="1em",
                         border="1px solid #ccc",
                         border_radius="md",
                     ),
                 ),
-                spacing="1em",
+                spacing="1",
             ),
             on_mount=SubidaRepositoriosState.load_repositorios,
             style={
@@ -154,10 +154,10 @@ def subida_repositorios():
         ),
         rx.center(
             rx.vstack(
-                rx.heading("Acceso Denegado", size="lg"),
+                rx.heading("Acceso Denegado", size="2"),
                 rx.text("Por favor, inicia sesión para acceder a esta página."),
                 rx.button("Ir al Login", on_click=rx.redirect("/login")),
-                spacing="1em",
+                spacing="1",
             ),
             width="100%",
             height="100vh",
