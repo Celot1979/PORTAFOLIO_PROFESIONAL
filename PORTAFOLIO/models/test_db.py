@@ -1,42 +1,51 @@
 import sqlite3
 import os
+from peewee import *
+import sys
 
-db_path = "/Users/danielgil/Documents/REFLEX/RUN/blog.db"
+# Añadir el directorio padre al path para poder importar database
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from database import db
 
-print(f"Intentando conectar a: {db_path}")
-
-try:
-    conn = sqlite3.connect(db_path)
-    print("Conexión exitosa a la base de datos.")
-    conn.close()
-except sqlite3.Error as e:
-    print(f"Error al conectar a la base de datos: {e}")
-
-# Prueba de creación de carpeta y archivo si no existen
-db_folder = os.path.dirname(db_path)
-if not os.path.exists(db_folder):
-    print(f"La carpeta '{db_folder}' no existe. Intentando crearla...")
-    try:
-        os.makedirs(db_folder, exist_ok=True)
-        print(f"Carpeta '{db_folder}' creada exitosamente.")
-    except OSError as e:
-        print(f"Error al crear la carpeta '{db_folder}': {e}")
-
-if not os.path.exists(db_path):
-    print(f"El archivo de base de datos '{db_path}' no existe. Intentando crearlo...")
+def test_sqlite():
+    """Prueba la conexión a SQLite."""
+    db_path = "/Users/danielgil/Documents/REFLEX/RUN/blog.db"
+    print("\n=== Probando conexión SQLite ===")
+    print(f"Ruta de la base de datos SQLite: {db_path}")
+    
     try:
         conn = sqlite3.connect(db_path)
+        print("✓ Conexión exitosa a SQLite")
         conn.close()
-        print(f"Archivo de base de datos '{db_path}' creado exitosamente.")
     except sqlite3.Error as e:
-        print(f"Error al crear el archivo de base de datos '{db_path}': {e}")
-else:
-    print(f"El archivo de base de datos '{db_path}' ya existe.")
+        print(f"✗ Error al conectar a SQLite: {e}")
 
-# Intento de conexión después de la creación/verificación
-try:
-    conn = sqlite3.connect(db_path)
-    print("Segunda conexión exitosa a la base de datos.")
-    conn.close()
-except sqlite3.Error as e:
-    print(f"Segundo error al conectar a la base de datos: {e}")
+def test_postgresql():
+    """Prueba la conexión a PostgreSQL."""
+    print("\n=== Probando conexión PostgreSQL ===")
+    try:
+        # Intentar conectar a la base de datos
+        db.connect()
+        
+        # Obtener información de la base de datos
+        cursor = db.execute_sql('SELECT version();')
+        version = cursor.fetchone()[0]
+        
+        print(f"✓ Versión de PostgreSQL: {version}")
+        print(f"✓ Base de datos conectada: {db.database}")
+        print(f"✓ Host: {db.connect_params.get('host', 'localhost')}")
+        print(f"✓ Puerto: {db.connect_params.get('port', 5432)}")
+        print(f"✓ Usuario: {db.connect_params.get('user', 'postgres')}")
+        
+        # Cerrar la conexión
+        db.close()
+        return True
+    except Exception as e:
+        print(f"✗ Error al conectar con PostgreSQL: {str(e)}")
+        return False
+
+if __name__ == "__main__":
+    print("=== Iniciando pruebas de conexión a bases de datos ===")
+    test_sqlite()
+    test_postgresql()
+    print("\n=== Fin de las pruebas ===")

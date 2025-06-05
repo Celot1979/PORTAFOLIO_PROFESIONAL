@@ -3,7 +3,6 @@ from rxconfig import config
 from .models.blog import BlogPost
 from .database import init_db
 from .database import db
-
 # Importar las páginas
 from .pages.quien_soy import quien_soy
 from .pages.proyectos import proyectos

@@ -52,7 +52,7 @@ class BlogPost(Model):
         return f"<BlogPost(title='{self.title}')>"
 
     def save(self):
-        """Guarda el post y genera un slug único si no existe. prueba"""
+        """Guarda el post y genera un slug único si no existe."""
         if not self.slug:
             self.slug = generate_unique_slug(self.title)
         self.updated_at = datetime.now()
