@@ -1,7 +1,7 @@
 from peewee import *
 import os
 from datetime import datetime
-from PORTAFOLIO.database import db
+from ..database import db
 
 class Repositorio(Model):
     titulo = CharField()
